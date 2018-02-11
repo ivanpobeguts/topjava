@@ -90,7 +90,7 @@ public class UserMealsUtil {
 
         Map<Object, Integer> daysMap = mealList.stream()
                 .sorted(Comparator.comparing(UserMeal::getDateTime))
-                .collect(Collectors.groupingBy(p-> p.getDateTime().toLocalDate(), Collectors.summingInt(UserMeal::getCalories)));
+                .collect(Collectors.groupingBy(m -> m.getDateTime().toLocalDate(), Collectors.summingInt(UserMeal::getCalories)));
 
         return mealList.stream()
                 .filter(m -> TimeUtil.isBetween(m.getDateTime().toLocalTime(), startTime, endTime))
