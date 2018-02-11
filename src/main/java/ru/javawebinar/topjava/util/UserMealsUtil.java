@@ -86,8 +86,6 @@ public class UserMealsUtil {
      */
     public static List<UserMealWithExceed> getFilteredWithExceeded2(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
 
-        final List<UserMeal> filteredMealList = new ArrayList<>();
-
         Map<Object, Integer> daysMap = mealList.stream()
                 .sorted(Comparator.comparing(UserMeal::getDateTime))
                 .collect(Collectors.groupingBy(m -> m.getDateTime().toLocalDate(), Collectors.summingInt(UserMeal::getCalories)));
