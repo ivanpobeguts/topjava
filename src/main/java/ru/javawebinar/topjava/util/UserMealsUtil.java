@@ -27,7 +27,7 @@ public class UserMealsUtil {
 
         );
 
-        for (UserMealWithExceed m : getFilteredWithExceeded2(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000)) {
+        for (UserMealWithExceed m : getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000)) {
             System.out.println(m.getDateTime() + ", " + m.isExceed());
         }
 //        .toLocalDate();
@@ -40,44 +40,14 @@ public class UserMealsUtil {
      */
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
 
-        List<UserMealWithExceed> userMealListExceed = new ArrayList<>();
-        LocalDate date = mealList.get(0).getDateTime().toLocalDate();
-        int counter = 0;
-        Map<LocalDate, Boolean> daysMap = new HashMap<>();
-        List<UserMeal> filteredMealList = new ArrayList<>();
-
-        mealList.sort(Comparator.comparing(UserMeal::getDateTime));
-        for (UserMeal m : mealList) {
-            // Если мы перешли к следующему дню, то проверяем, превысили ли мы сумму калорий. Кладём соответствующее и предыдущую дату во временный Map.
-            if (!m.getDateTime().toLocalDate().equals(date)) {
-                if (counter > caloriesPerDay) {
-                    daysMap.put(date, true);
-                } else{
-                    daysMap.put(date, false);
-                }
-                date = m.getDateTime().toLocalDate();
-                counter = 0;
-            }
-            counter += m.getCalories();
-            // Если это последний элемент списка, то проверяем, превысили ли мы сумму калорий. Кладём соответствующее и текущую дату во временный Map.
-            if (mealList.indexOf(m) == (mealList.size() -1)) {
-                if (counter > caloriesPerDay) {
-                    daysMap.put(m.getDateTime().toLocalDate(), true);
-                } else{
-                    daysMap.put(m.getDateTime().toLocalDate(), false);
-                }
-            }
-            // Фильтруем лист по времени, кладём значения во временный list.
-            if (TimeUtil.isBetween(m.getDateTime().toLocalTime(), startTime, endTime)) {
-                filteredMealList.add(new UserMeal(m.getDateTime(), m.getDescription(), m.getCalories()));
-            }
-        }
-
-        // Проходим по временному списку и создаём конечный список с UserMealWithExceed. Используем данные из Map, сформированном в первом цикле.
-        for (UserMeal m : filteredMealList) {
-            userMealListExceed.add(new UserMealWithExceed(m.getDateTime(), m.getDescription(), m.getCalories(), daysMap.get(m.getDateTime().toLocalDate())));
-        }
-        return userMealListExceed;
+        Map<LocalDate, Integer> daysMap = new HashMap<>();
+        mealList.forEach(m -> daysMap.merge(m.getDateTime().toLocalDate(), m.getCalories(), (m1, m2) -> m1 + m2));
+        List<UserMealWithExceed> result = new ArrayList<>();
+        mealList.forEach(m -> {
+            if (TimeUtil.isBetween(m.getDateTime().toLocalTime(), startTime, endTime))
+                result.add(new UserMealWithExceed(m.getDateTime(), m.getDescription(), m.getCalories(), daysMap.getOrDefault(m.getDateTime().toLocalDate(), 0) > caloriesPerDay));
+        });
+        return result;
     }
 
 
@@ -87,7 +57,6 @@ public class UserMealsUtil {
     public static List<UserMealWithExceed> getFilteredWithExceeded2(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
 
         Map<Object, Integer> daysMap = mealList.stream()
-                .sorted(Comparator.comparing(UserMeal::getDateTime))
                 .collect(Collectors.groupingBy(m -> m.getDateTime().toLocalDate(), Collectors.summingInt(UserMeal::getCalories)));
 
         return mealList.stream()
