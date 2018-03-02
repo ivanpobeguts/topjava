@@ -46,14 +46,10 @@ public class MealServlet extends HttpServlet {
             String description = request.getParameter("description");
             int calories = Integer.valueOf(request.getParameter("calories"));
             LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
-            log.info("DESC: " + description);
-            log.info("CAL: " + calories);
-            log.info("DATE: " + date);
             repository.create(date, description,calories);
         }
         else if (action.equals("remove")) {
             String id = request.getParameter("id");
-            log.info("ID: " + id);
             repository.delete(Integer.parseInt(id));
         }
 
