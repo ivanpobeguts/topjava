@@ -1,5 +1,8 @@
-#meals {
+body {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+#meals {
     border-collapse: collapse;
     width: 100%;
 }
