@@ -22,6 +22,12 @@
                     <td><c:out value="${meal.getDescription()}"/></td>
                     <td><c:out value="${meal.getCalories()}"/></td>
                     <td><c:out value="${meal.getDateTime().format(requestScope.formatter)}"/></td>
+                    <td>
+                        <form action="meals" method="POST" accept-charset="UTF-8">
+                            <input type="hidden" name="id" value="${meal.getId()}">
+                            <input type="submit" value="remove" name="ACTION" />
+                        </form>
+                    </td>
                 </tr>
             </c:when>
             <c:otherwise>
@@ -29,19 +35,23 @@
                     <td><c:out value="${meal.getDescription()}"/></td>
                     <td><c:out value="${meal.getCalories()}"/></td>
                     <td><c:out value="${meal.getDateTime().format(requestScope.formatter)}"/></td>
+                    <td>
+                        <form action="meals" method="POST" accept-charset="UTF-8">
+                            <input type="hidden" name="id" value="${meal.getId()}">
+                            <input type="submit" value="remove" name="ACTION" />
+                        </form>
+                    </td>
                 </tr>
             </c:otherwise>
         </c:choose>
     </c:forEach>
     </table>
 
-    <%--<button id="myBtn">Add meal</button>--%>
-
 <form action="meals" method="POST" accept-charset="UTF-8">
     <input type="text" name="description" />
     <input type="text" name="calories" />
     <input id="date" type="datetime-local" name="date">
-    <input type="submit" value="Submit" />
+    <input type="submit" value="create" name="ACTION"/>
 </form>
 
 </body>
