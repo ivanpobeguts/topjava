@@ -1,0 +1,20 @@
+#meals {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#meals td, #meals th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#meals tr:hover {background-color: #ddd;}
+
+#meals th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #FAFAFA;
+    color: black;
+}
