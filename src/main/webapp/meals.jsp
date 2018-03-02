@@ -35,5 +35,14 @@
     </c:forEach>
     </table>
 
+    <%--<button id="myBtn">Add meal</button>--%>
+
+<form action="meals" method="POST" accept-charset="UTF-8">
+    <input type="text" name="description" />
+    <input type="text" name="calories" />
+    <input id="date" type="datetime-local" name="date">
+    <input type="submit" value="Submit" />
+</form>
+
 </body>
 </html>

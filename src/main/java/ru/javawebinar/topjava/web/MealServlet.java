@@ -40,12 +40,19 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        request.setCharacterEncoding("UTF-8");
+        String description = request.getParameter("description");
+        int calories = Integer.valueOf(request.getParameter("calories"));
+        LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
+        log.info("DESC: " + description);
+        log.info("CAL: " + calories);
+        log.info("DATE: " + date);
+        repository.create(date, description,calories);
+        response.sendRedirect("/topjava/meals");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.info(repository.get().toString());
         List<MealWithExceed> mealsWithExceeded = MealsUtil.getFilteredWithExceeded(repository.get(), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
         request.setAttribute("mealList", mealsWithExceeded);
         request.setAttribute("formatter", formatter);
