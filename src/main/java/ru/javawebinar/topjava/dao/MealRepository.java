@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface MealRepository {
     List<Meal> get();
-    void create(LocalDateTime dateTime, String description, int calories);
+    Meal getById(int id);
+    void create(Meal meal);
     void delete (int id);
-    void update (int id);
+//    void update (int id, LocalDateTime dateTime, String description, int calories);
 }

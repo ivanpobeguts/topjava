@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.dao.InMemoryMealRepository;
 import ru.javawebinar.topjava.dao.MealRepository;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -28,29 +29,36 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
+        log.info("1");
         super.init(config);
+        log.info("2");
         repository = new InMemoryMealRepository();
-        repository.create(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
-        repository.create(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
-        repository.create(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500);
-        repository.create(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000);
-        repository.create(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500);
-        repository.create(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510);
+        log.info("3");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("ACTION");
-        if (action.equals("create")) {
-            String description = request.getParameter("description");
-            int calories = Integer.valueOf(request.getParameter("calories"));
-            LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
-            repository.create(date, description,calories);
-        }
-        else if (action.equals("remove")) {
-            String id = request.getParameter("id");
-            repository.delete(Integer.parseInt(id));
+        switch (action) {
+            case "create": {
+                String description = request.getParameter("description");
+                int calories = Integer.valueOf(request.getParameter("calories"));
+                LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
+                repository.create(new Meal(date, description, calories));
+                break;
+            }
+            case "remove":
+                String id = request.getParameter("id");
+                repository.delete(Integer.parseInt(id));
+                break;
+            case "edit": {
+                String description = request.getParameter("description");
+                int calories = Integer.valueOf(request.getParameter("calories"));
+                LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
+                repository.create(new Meal(date, description, calories));
+                break;
+            }
         }
 
         response.sendRedirect("/topjava/meals");
@@ -58,9 +66,19 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<MealWithExceed> mealsWithExceeded = MealsUtil.getFilteredWithExceeded(repository.get(), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
-        request.setAttribute("mealList", mealsWithExceeded);
-        request.setAttribute("formatter", formatter);
-        request.getRequestDispatcher("/meals.jsp").forward(request, response);
+        String action = request.getParameter("action");
+        if (action == null) {
+            List<MealWithExceed> mealsWithExceeded = MealsUtil.getFilteredWithExceeded(repository.get(), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
+            request.setAttribute("mealList", mealsWithExceeded);
+            request.setAttribute("formatter", formatter);
+            request.getRequestDispatcher("/meals.jsp").forward(request, response);
+        }
+        else if (action.equals("edit")){
+            String id = request.getParameter("id");
+            Meal meal = repository.getById(Integer.parseInt(id));
+            request.setAttribute("meal", meal);
+            request.setAttribute("formatter", formatter);
+            request.getRequestDispatcher("editMeal.jsp").forward(request, response);
+        }
     }
 }

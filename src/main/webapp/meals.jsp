@@ -28,6 +28,7 @@
                             <input type="submit" value="remove" name="ACTION" />
                         </form>
                     </td>
+                    <td><a href="meals?action=edit&id=${meal.getId()}">Update</a> </td>
                 </tr>
             </c:when>
             <c:otherwise>
@@ -41,6 +42,7 @@
                             <input type="submit" value="remove" name="ACTION" />
                         </form>
                     </td>
+                    <td><a href="meals?action=edit&id=${meal.getId()}">Update</a> </td>
                 </tr>
             </c:otherwise>
         </c:choose>
