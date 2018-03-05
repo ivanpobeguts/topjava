@@ -29,17 +29,15 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        log.info("1");
         super.init(config);
-        log.info("2");
         repository = new InMemoryMealRepository();
-        log.info("3");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("ACTION");
+        String id = null;
         switch (action) {
             case "create": {
                 String description = request.getParameter("description");
@@ -49,14 +47,15 @@ public class MealServlet extends HttpServlet {
                 break;
             }
             case "remove":
-                String id = request.getParameter("id");
+                id = request.getParameter("id");
                 repository.delete(Integer.parseInt(id));
                 break;
             case "edit": {
+                id = request.getParameter("id");
                 String description = request.getParameter("description");
                 int calories = Integer.valueOf(request.getParameter("calories"));
                 LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
-                repository.create(new Meal(date, description, calories));
+                repository.create(new Meal(date, description, calories, Integer.parseInt(id)));
                 break;
             }
         }

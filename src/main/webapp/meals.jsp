@@ -16,9 +16,7 @@
             <th>Time</th>
         </tr>
     <c:forEach items="${requestScope.mealList}" var="meal">
-        <c:choose>
-            <c:when test="${not meal.isExceed()}">
-                <tr bgcolor="#7EE25D">
+                <tr bgcolor="${not meal.isExceed() ? '#7EE25D' : '#F45B5B'}">
                     <td><c:out value="${meal.getDescription()}"/></td>
                     <td><c:out value="${meal.getCalories()}"/></td>
                     <td><c:out value="${meal.getDateTime().format(requestScope.formatter)}"/></td>
@@ -28,31 +26,20 @@
                             <input type="submit" value="remove" name="ACTION" />
                         </form>
                     </td>
-                    <td><a href="meals?action=edit&id=${meal.getId()}">Update</a> </td>
-                </tr>
-            </c:when>
-            <c:otherwise>
-                <tr bgcolor="#F45B5B">
-                    <td><c:out value="${meal.getDescription()}"/></td>
-                    <td><c:out value="${meal.getCalories()}"/></td>
-                    <td><c:out value="${meal.getDateTime().format(requestScope.formatter)}"/></td>
                     <td>
-                        <form action="meals" method="POST" accept-charset="UTF-8">
-                            <input type="hidden" name="id" value="${meal.getId()}">
-                            <input type="submit" value="remove" name="ACTION" />
+                        <form>
+                            <input type="button" value="Update"
+                                   onclick="window.location.href='meals?action=edit&id=${meal.getId()}'"/>
                         </form>
                     </td>
-                    <td><a href="meals?action=edit&id=${meal.getId()}">Update</a> </td>
                 </tr>
-            </c:otherwise>
-        </c:choose>
     </c:forEach>
     </table>
 
 <form action="meals" method="POST" accept-charset="UTF-8">
-    <input type="text" name="description" />
-    <input type="text" name="calories" />
-    <input id="date" type="datetime-local" name="date">
+    <input type="text" name="description"  title="Description"/>
+    <input type="text" name="calories" title="Calories"/>
+    <input id="date" type="datetime-local" name="date" title="Date">
     <input type="submit" value="create" name="ACTION"/>
 </form>
 

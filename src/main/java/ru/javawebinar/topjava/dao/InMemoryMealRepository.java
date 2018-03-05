@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.dao;
 
+import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.web.UserServlet;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -11,10 +13,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class InMemoryMealRepository implements MealRepository{
 
     private Map<Integer, Meal> mainMap = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
+    private static final Logger log = getLogger(UserServlet.class);
 
     public InMemoryMealRepository(){
         create(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500));
@@ -38,9 +43,11 @@ public class InMemoryMealRepository implements MealRepository{
     @Override
     public void create(Meal meal) {
         if (meal.getId() != null){
+            log.info("ID: " + meal.getId());
             mainMap.put(meal.getId(), new Meal(meal.getDateTime(), meal.getDescription(), meal.getCalories(), meal.getId()));
         }
         else {
+            log.info("ID: " + meal.getId());
             int newId = counter.incrementAndGet();
             mainMap.put(newId, new Meal(meal.getDateTime(), meal.getDescription(), meal.getCalories(), newId));
         }
