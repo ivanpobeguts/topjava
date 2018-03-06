@@ -31,7 +31,7 @@ public class InMemoryMealRepository implements MealRepository{
     }
 
     @Override
-    public List<Meal> get() {
+    public List<Meal> getAll() {
         return new ArrayList<>(mainMap.values());
     }
 
@@ -43,13 +43,11 @@ public class InMemoryMealRepository implements MealRepository{
     @Override
     public void create(Meal meal) {
         if (meal.getId() != null){
-            log.info("ID: " + meal.getId());
-            mainMap.put(meal.getId(), new Meal(meal.getDateTime(), meal.getDescription(), meal.getCalories(), meal.getId()));
+            mainMap.put(meal.getId(), new Meal(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories()));
         }
         else {
-            log.info("ID: " + meal.getId());
             int newId = counter.incrementAndGet();
-            mainMap.put(newId, new Meal(meal.getDateTime(), meal.getDescription(), meal.getCalories(), newId));
+            mainMap.put(newId, new Meal(newId, meal.getDateTime(), meal.getDescription(), meal.getCalories()));
         }
     }
 

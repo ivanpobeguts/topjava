@@ -55,19 +55,19 @@ public class MealServlet extends HttpServlet {
                 String description = request.getParameter("description");
                 int calories = Integer.valueOf(request.getParameter("calories"));
                 LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
-                repository.create(new Meal(date, description, calories, Integer.parseInt(id)));
+                repository.create(new Meal(Integer.parseInt(id), date, description, calories));
                 break;
             }
         }
 
-        response.sendRedirect("/topjava/meals");
+        response.sendRedirect(request.getContextPath() + "/meals");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         if (action == null) {
-            List<MealWithExceed> mealsWithExceeded = MealsUtil.getFilteredWithExceeded(repository.get(), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
+            List<MealWithExceed> mealsWithExceeded = MealsUtil.getFilteredWithExceeded(repository.getAll(), LocalTime.MIN, LocalTime.MAX, 2000);
             request.setAttribute("mealList", mealsWithExceeded);
             request.setAttribute("formatter", formatter);
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
@@ -77,7 +77,7 @@ public class MealServlet extends HttpServlet {
             Meal meal = repository.getById(Integer.parseInt(id));
             request.setAttribute("meal", meal);
             request.setAttribute("formatter", formatter);
-            request.getRequestDispatcher("editMeal.jsp").forward(request, response);
+            request.getRequestDispatcher("/editMeal.jsp").forward(request, response);
         }
     }
 }
