@@ -37,25 +37,20 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("ACTION");
-        String id = null;
+        String id = request.getParameter("id");
+        String description = request.getParameter("description");
+        String calories = request.getParameter("calories");
+        String date = request.getParameter("date");
         switch (action) {
             case "create": {
-                String description = request.getParameter("description");
-                int calories = Integer.valueOf(request.getParameter("calories"));
-                LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
-                repository.create(new Meal(date, description, calories));
+                repository.create(new Meal(LocalDateTime.parse(date), description, Integer.valueOf(calories)));
                 break;
             }
             case "remove":
-                id = request.getParameter("id");
                 repository.delete(Integer.parseInt(id));
                 break;
             case "edit": {
-                id = request.getParameter("id");
-                String description = request.getParameter("description");
-                int calories = Integer.valueOf(request.getParameter("calories"));
-                LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
-                repository.create(new Meal(Integer.parseInt(id), date, description, calories));
+                repository.create(new Meal(Integer.parseInt(id), LocalDateTime.parse(date), description, Integer.valueOf(calories)));
                 break;
             }
         }
