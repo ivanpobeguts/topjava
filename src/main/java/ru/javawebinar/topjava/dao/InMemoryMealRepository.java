@@ -42,13 +42,10 @@ public class InMemoryMealRepository implements MealRepository{
 
     @Override
     public void create(Meal meal) {
-        if (meal.getId() != null){
-            mainMap.put(meal.getId(), new Meal(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories()));
+        if (meal.getId() == null){
+            meal.setId(counter.incrementAndGet());
         }
-        else {
-            int newId = counter.incrementAndGet();
-            mainMap.put(newId, new Meal(newId, meal.getDateTime(), meal.getDescription(), meal.getCalories()));
-        }
+        mainMap.put(meal.getId(), new Meal(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories()));
     }
 
     @Override
