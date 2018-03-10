@@ -20,8 +20,8 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     private Map<Integer, User> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
-    int adminId = 1;
-    int userId = 2;
+    public static int adminId = 1;
+    public static int userId = 2;
 
     {
         save(new User(1, "Admin", "admin@gmail.com", "admin", Role.ROLE_ADMIN));
