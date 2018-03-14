@@ -59,7 +59,7 @@ public class MealRestController {
         service.update(meal, userId);
     }
 
-    public List<MealWithExceed> getFilteredByDate(LocalTime start, LocalTime end) {
+    public List<MealWithExceed> getFilteredByTime(LocalTime start, LocalTime end) {
         int userId = AuthorizedUser.id();
         log.info("getFilteredByDate");
         log.info("ID ", userId);
