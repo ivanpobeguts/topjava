@@ -47,6 +47,9 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
             id = counter.incrementAndGet();
             meal.setId(id);
         }
+        else if (get(id, userId) == null) {
+            return null;
+        }
         // treat case: update, but absent in storage
         Map<Integer, Meal> map = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
         map.put(id, meal);
@@ -55,13 +58,10 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public void delete(int id, int userId) {
+    public boolean delete(int id, int userId) {
         Map<Integer, Meal> map = repository.get(userId);
-        log.info("delete userId {}", userId);
-        if (map != null && map.containsKey(id)) {
-            map.remove(id);
-        }
         log.info("delete {}", id);
+        return (map != null) && (map.remove(id) != null);
     }
 
     @Override
