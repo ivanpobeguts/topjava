@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS meals;
 DROP TABLE IF EXISTS users;
 DROP SEQUENCE IF EXISTS global_seq;
 
@@ -33,3 +34,4 @@ CREATE TABLE meals
   description VARCHAR,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX meals_datetime_idx ON meals (datetime);
