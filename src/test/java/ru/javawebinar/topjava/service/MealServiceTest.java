@@ -36,7 +36,7 @@ public class MealServiceTest {
 
     @Test
     public void get() throws Exception {
-        assertThat(meal1, is(service.get(MEAL_ID, START_SEQ)));
+        assertThat(meal1.toString(), is(service.get(MEAL_ID, START_SEQ).toString()));
     }
 
     @Test(expected = NotFoundException.class)
@@ -47,7 +47,7 @@ public class MealServiceTest {
     @Test
     public void delete() throws Exception{
         service.delete(MEAL_ID, START_SEQ);
-        assertThat(Arrays.asList(meal6, meal5, meal4, meal3, meal2), is(service.getAll(START_SEQ)));
+        assertThat(Arrays.asList(meal6, meal5, meal4, meal3, meal2).toString(), is(service.getAll(START_SEQ).toString()));
     }
 
     @Test(expected = NotFoundException.class)
@@ -57,21 +57,21 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenDateTimes() {
-        assertThat(Arrays.asList(meal2, meal1),
+        assertThat(Arrays.asList(meal2, meal1).toString(),
                 is(service.getBetweenDateTimes(LocalDateTime.of(2015, Month.MAY, 30, 8, 0),
-                        LocalDateTime.of(2015, Month.MAY, 30, 14, 0), START_SEQ)));
+                        LocalDateTime.of(2015, Month.MAY, 30, 14, 0), START_SEQ).toString()));
     }
 
     @Test
     public void getAll() throws Exception {
-        assertThat(Arrays.asList(meal6, meal5, meal4, meal3, meal2, meal1), is(service.getAll(START_SEQ)));
+        assertThat(Arrays.asList(meal6, meal5, meal4, meal3, meal2, meal1).toString(), is(service.getAll(START_SEQ).toString()));
     }
 
     @Test
     public void update() throws Exception {
         Meal updated = new Meal(MEAL_ID, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 600);
         service.update(updated, START_SEQ);
-        assertThat(updated, is(service.get(MEAL_ID, START_SEQ)));
+        assertThat(updated.toString(), is(service.get(MEAL_ID, START_SEQ).toString()));
     }
 
     @Test(expected = NotFoundException.class)
@@ -84,6 +84,6 @@ public class MealServiceTest {
     public void create() {
         Meal newMeal = new Meal(null, LocalDateTime.of(2015, Month.MAY, 29, 10, 0), "Завтрак", 600);
         service.create(newMeal, START_SEQ);
-        assertThat(Arrays.asList(meal6, meal5, meal4, meal3, meal2, meal1, newMeal), is(service.getAll(START_SEQ)));
+        assertThat(Arrays.asList(meal6, meal5, meal4, meal3, meal2, meal1, newMeal).toString(), is(service.getAll(START_SEQ).toString()));
     }
 }
