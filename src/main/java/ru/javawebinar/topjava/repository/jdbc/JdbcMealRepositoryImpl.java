@@ -54,14 +54,16 @@ public class JdbcMealRepositoryImpl implements MealRepository {
                 .addValue("datetime", meal.getDateTime())
                 .addValue("calories", meal.getCalories())
                 .addValue("description", meal.getDescription())
-                .addValue("userId", userId);
+                .addValue("user_id", userId);
         if (meal.isNew()) {
             Number newKey = insertMeal.executeAndReturnKey(map);
             meal.setId(newKey.intValue());
-        } else if (namedParameterJdbcTemplate.update(
-                "UPDATE meals SET datetime:datetime, calories=:calories, description=:description, " +
-                        "userId=:userId WHERE id=:id", map) == 0) {
-            return null;
+        } else {
+            if (namedParameterJdbcTemplate.update(
+                    "UPDATE meals SET datetime=:datetime, calories=:calories, description=:description " +
+                            " WHERE id=:id AND user_id=:user_id", map) == 0) {
+                return null;
+            }
         }
         return meal;
     }
@@ -73,13 +75,13 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        List<Meal> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
-        return DataAccessUtils.singleResult(users);
+        List<Meal> meals = jdbcTemplate.query("SELECT * FROM meals WHERE id=?", ROW_MAPPER, id);
+        return DataAccessUtils.singleResult(meals);
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return jdbcTemplate.query("SELECT * FROM meals WHERE userid=? ORDER BY datetime DESC", ROW_MAPPER, userId);
+        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? ORDER BY datetime DESC", ROW_MAPPER, userId);
     }
 
     @Override
