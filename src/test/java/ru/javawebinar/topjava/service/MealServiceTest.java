@@ -29,7 +29,7 @@ public class MealServiceTest {
 
     @Test
     public void get() throws Exception {
-        assertMatch(service.get(MEAL_ID, START_SEQ), meal1);
+        assertMatch(service.get(MEAL_ID, START_SEQ), MEAL_1);
     }
 
     @Test(expected = NotFoundException.class)
@@ -40,7 +40,7 @@ public class MealServiceTest {
     @Test
     public void delete() throws Exception{
         service.delete(MEAL_ID, START_SEQ);
-        assertMatch(service.getAll(START_SEQ), meal6, meal5, meal4, meal3, meal2);
+        assertMatch(service.getAll(START_SEQ), MEAL_6, MEAL_5, MEAL_4, MEAL_3, MEAL_2);
     }
 
     @Test(expected = NotFoundException.class)
@@ -51,12 +51,12 @@ public class MealServiceTest {
     @Test
     public void getBetweenDateTimes() {
         assertMatch(service.getBetweenDateTimes(LocalDateTime.of(2015, Month.MAY, 30, 8, 0),
-                LocalDateTime.of(2015, Month.MAY, 30, 14, 0), START_SEQ), meal2, meal1);
+                LocalDateTime.of(2015, Month.MAY, 30, 14, 0), START_SEQ), MEAL_2, MEAL_1);
     }
 
     @Test
     public void getAll() throws Exception {
-        assertMatch(service.getAll(START_SEQ), meal6, meal5, meal4, meal3, meal2, meal1);
+        assertMatch(service.getAll(START_SEQ), MEAL_6, MEAL_5, MEAL_4, MEAL_3, MEAL_2, MEAL_1);
     }
 
     @Test
@@ -76,6 +76,6 @@ public class MealServiceTest {
     public void create() {
         Meal newMeal = new Meal(null, LocalDateTime.of(2015, Month.MAY, 29, 10, 0), "Завтрак", 600);
         service.create(newMeal, START_SEQ);
-        assertMatch(service.getAll(START_SEQ), meal6, meal5, meal4, meal3, meal2, meal1, newMeal);
+        assertMatch(service.getAll(START_SEQ), MEAL_6, MEAL_5, MEAL_4, MEAL_3, MEAL_2, MEAL_1, newMeal);
     }
 }
