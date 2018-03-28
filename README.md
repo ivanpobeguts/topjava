@@ -1,5 +1,5 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1f9504e4f58e4dd78202602a46d72fcc)](https://app.codacy.com/app/ivanpobeguts/topjava)
-[![Build Status](https://travis-ci.org/ivanpobeguts/topjava.svg?branch=master)](https://travis-ci.org/ivanpobeguts/topjava)
+[![Build Status](https://travis-ci.org/ivanpobeguts/topjava.svg?branch=HW4)](https://travis-ci.org/ivanpobeguts/topjava)
 [![VersionEye](https://www.versioneye.com/user/projects/5a14435c0fb24f2a6d408cde/badge.svg)](https://www.versioneye.com/user/projects/5a14435c0fb24f2a6d408cde)
 
 Java Enterprise Online Project 
