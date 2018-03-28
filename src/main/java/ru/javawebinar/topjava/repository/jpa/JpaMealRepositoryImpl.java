@@ -9,6 +9,9 @@ import ru.javawebinar.topjava.repository.MealRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -48,10 +51,20 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        List<Meal> meals = em.createNamedQuery(Meal.GET, Meal.class)
-                .setParameter("id", id)
-                .setParameter("userId", userId)
-                .getResultList();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Meal> criteria = builder.createQuery(Meal.class);
+        Root<Meal> root = criteria.from(Meal.class);
+        criteria.select(root).where(
+                builder.equal(root.get("user").get("id"), userId),
+                builder.equal(root.get("id"), id)
+        );
+        List<Meal> meals = em.createQuery(criteria).getResultList();
+
+//        List<Meal> meals = em.createNamedQuery(Meal.GET, Meal.class)
+//                .setParameter("id", id)
+//                .setParameter("userId", userId)
+//                .getResultList();
+
         return DataAccessUtils.singleResult(meals);
     }
 

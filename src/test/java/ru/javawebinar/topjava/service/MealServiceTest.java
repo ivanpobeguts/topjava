@@ -56,6 +56,14 @@ public class MealServiceTest {
         protected void finished(long nanos, Description description) {
             logInfo(description, nanos);
         }
+        private void logInfo(Description description, long nanos) {
+            String testName = description.getMethodName();
+            long testTime = TimeUnit.NANOSECONDS.toMicros(nanos);
+            testResults.put(testName, testTime);
+            log.info(String.format("************** Test \"%s\" finished, spent %d microseconds ****************",
+                    testName, testTime));
+        }
+
     };
 
     @ClassRule
@@ -64,21 +72,11 @@ public class MealServiceTest {
             @Override
             protected void after() {
                 log.info("************** MealServiceTest results:\n");
-                testResults.forEach((key, value) -> {
-                    log.info(String.format("************** Test \"%s\" finished, spent %d microseconds ****************", key, value));
-                });
+                testResults.forEach((key, value) ->
+                        log.info(String.format("************** Test \"%s\" finished, spent %d microseconds ****************", key, value)));
             }
         };
     }
-
-    private static void logInfo(Description description, long nanos) {
-        String testName = description.getMethodName();
-        long testTime = TimeUnit.NANOSECONDS.toMicros(nanos);
-        testResults.put(testName, testTime);
-        log.info(String.format("************** Test \"%s\" finished, spent %d microseconds ****************",
-                testName, testTime));
-    }
-
 
     @Test
     public void delete() throws Exception {
