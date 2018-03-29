@@ -1,10 +1,9 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.ClassRule;
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
@@ -56,26 +55,22 @@ public class MealServiceTest {
         protected void finished(long nanos, Description description) {
             logInfo(description, nanos);
         }
+
         private void logInfo(Description description, long nanos) {
             String testName = description.getMethodName();
-            long testTime = TimeUnit.NANOSECONDS.toMicros(nanos);
+            long testTime = TimeUnit.MILLISECONDS.toMillis(nanos);
             testResults.put(testName, testTime);
-            log.info(String.format("************** Test \"%s\" finished, spent %d microseconds ****************",
+            log.info(String.format("************** Test \"%s\" finished, spent %d milliseconds ****************",
                     testName, testTime));
         }
 
     };
 
-    @ClassRule
-    public static ExternalResource getResource() {
-        return new ExternalResource() {
-            @Override
-            protected void after() {
-                log.info("************** MealServiceTest results:\n");
-                testResults.forEach((key, value) ->
-                        log.info(String.format("************** Test \"%s\" finished, spent %d microseconds ****************", key, value)));
-            }
-        };
+    @AfterClass
+    public static void after() {
+        log.info("************** MealServiceTest results:\n");
+        testResults.forEach((key, value) ->
+                log.info(String.format("************** Test \"%s\" finished, spent %d milliseconds ****************", key, value)));
     }
 
     @Test

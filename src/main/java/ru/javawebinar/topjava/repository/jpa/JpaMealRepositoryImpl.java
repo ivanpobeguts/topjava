@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.repository.jpa;
 
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
@@ -9,9 +8,6 @@ import ru.javawebinar.topjava.repository.MealRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,12 +24,11 @@ public class JpaMealRepositoryImpl implements MealRepository {
         User ref = em.getReference(User.class, userId);
         meal.setUser(ref);
 
-        if(meal.isNew()){
+        if (meal.isNew()) {
             em.persist(meal);
             return meal;
-        }
-        else{
-            if(get(meal.getId(), userId)!=null)
+        } else {
+            if (get(meal.getId(), userId) != null)
                 return em.merge(meal);
             else
                 return null;
@@ -51,21 +46,11 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<Meal> criteria = builder.createQuery(Meal.class);
-        Root<Meal> root = criteria.from(Meal.class);
-        criteria.select(root).where(
-                builder.equal(root.get("user").get("id"), userId),
-                builder.equal(root.get("id"), id)
-        );
-        List<Meal> meals = em.createQuery(criteria).getResultList();
-
-//        List<Meal> meals = em.createNamedQuery(Meal.GET, Meal.class)
-//                .setParameter("id", id)
-//                .setParameter("userId", userId)
-//                .getResultList();
-
-        return DataAccessUtils.singleResult(meals);
+        Meal meal = em.find(Meal.class, id);
+        if (meal.getUser().getId() == userId) {
+            return meal;
+        }
+        return null;
     }
 
     @Override
