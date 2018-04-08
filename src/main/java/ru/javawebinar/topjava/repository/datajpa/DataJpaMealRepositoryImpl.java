@@ -47,4 +47,8 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
         return mealRepository.findAllByUserIdAndDateTimeBetweenOrderByDateTimeDesc(userId, startDate, endDate);
     }
 
+    public Meal getWithUser(int id, int userId){
+        return mealRepository.getWithUser(userId, id).orElse(null);
+    }
+
 }

@@ -28,5 +28,8 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     List<Meal> findAllByUserIdAndDateTimeBetweenOrderByDateTimeDesc(
             int userId, LocalDateTime startDate, LocalDateTime endDate);
+
+    @Query("SELECT m FROM Meal m JOIN FETCH m.user u WHERE u.id=?1 AND m.id=?2")
+    Optional<Meal> getWithUser(int userId, int id);
 }
 
