@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
-    @Modifying
     @Transactional
     int deleteByUserIdAndId(int userId, int id);
 
