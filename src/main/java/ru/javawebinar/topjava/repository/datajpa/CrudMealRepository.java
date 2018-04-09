@@ -11,24 +11,26 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
+
     @Modifying
     @Transactional
     int deleteByUserIdAndId(int userId, int id);
 
     @Override
-    @Transactional
+    @Modifying
     Meal save(Meal meal);
 
-    Optional<Meal> findByUserIdAndId(int userId, int id);
+    @Transactional(readOnly = true)
+    Meal findByUserIdAndId(int userId, int id);
 
-    @Query("SELECT m FROM Meal m WHERE m.user.id=?1 AND m.id=?2")
-    Optional<Meal> get(int userId, int id);
-
+    @Transactional(readOnly = true)
     List<Meal> findAllByUserIdOrderByDateTimeDesc(int userId);
 
+    @Transactional(readOnly = true)
     List<Meal> findAllByUserIdAndDateTimeBetweenOrderByDateTimeDesc(
             int userId, LocalDateTime startDate, LocalDateTime endDate);
 
+    @Transactional(readOnly = true)
     @Query("SELECT m FROM Meal m JOIN FETCH m.user u WHERE u.id=?1 AND m.id=?2")
     Optional<Meal> getWithUser(int userId, int id);
 }

@@ -42,9 +42,6 @@ public abstract class ServiceTest {
         SLF4JBridgeHandler.install();
     }
 
-    @Autowired
-    private CacheManager cacheManager;
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -73,8 +70,4 @@ public abstract class ServiceTest {
                 "\n---------------------------------");
     }
 
-    @Before
-    public void setUp() throws Exception {
-        cacheManager.getCache("users").clear();
-    }
 }

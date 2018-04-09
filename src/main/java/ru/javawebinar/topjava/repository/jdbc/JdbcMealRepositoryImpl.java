@@ -18,15 +18,20 @@ import java.util.List;
 
 public abstract class JdbcMealRepositoryImpl<T> implements MealRepository {
 
+    @Autowired
     private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
 
+    @Autowired
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Autowired
     private final SimpleJdbcInsert insertMeal;
 
-    protected abstract T dateTimeImpl(LocalDateTime dateTime);
+    @Autowired
+    protected abstract T dateTimeImpl(LocalDateTime t);
 
     @Autowired
     public JdbcMealRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -44,7 +49,7 @@ public abstract class JdbcMealRepositoryImpl<T> implements MealRepository {
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
-                .addValue("date_time", meal.getDateTime())
+                .addValue("date_time", dateTimeImpl(meal.getDateTime()))
                 .addValue("user_id", userId);
 
         if (meal.isNew()) {
@@ -84,6 +89,6 @@ public abstract class JdbcMealRepositoryImpl<T> implements MealRepository {
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time BETWEEN  ? AND ? ORDER BY date_time DESC",
-                ROW_MAPPER, userId, startDate, endDate);
+                ROW_MAPPER, userId, dateTimeImpl(startDate), dateTimeImpl(endDate));
     }
 }
