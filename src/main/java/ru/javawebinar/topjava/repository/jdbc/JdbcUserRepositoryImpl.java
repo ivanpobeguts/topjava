@@ -83,17 +83,16 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     @Override
     public User get(int id) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
-        User user = DataAccessUtils.singleResult(users);
-        if(user != null) {
-            List<String> roles = jdbcTemplate.queryForList("SELECT role FROM user_roles WHERE user_id=?", String.class, user.getId());
-            user.setRoles(roles.stream().map(Role::valueOf).collect(Collectors.toList()));
-        }
-        return user;
+        return setRoles(users);
     }
 
     @Override
     public User getByEmail(String email) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
+        return setRoles(users);
+    }
+
+    private User setRoles(List<User> users){
         User user = DataAccessUtils.singleResult(users);
         if(user != null) {
             List<String> roles = jdbcTemplate.queryForList("SELECT role FROM user_roles WHERE user_id=?", String.class, user.getId());
