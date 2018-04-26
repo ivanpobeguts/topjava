@@ -66,7 +66,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(created)))
                         .andDo(print())
-                        .andExpect(status().isOk())
+                        .andExpect(status().isCreated())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                         .andExpect(contentJson(created))
         );
